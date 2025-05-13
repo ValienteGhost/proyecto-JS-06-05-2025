@@ -39,3 +39,16 @@ function calcularpromedio(){
     const average=total/students.length
     promedioDiv.innerText=`El promedio del curso o estudiante es: ${average.toFixed(2)}` 
 }
+
+/* Forma alternativa de calcular el promedio
+function calcularPromedio(){
+    let suma = 0;
+    for (const student of students){
+    suma += student.grade;
+}
+    const count = students.length;
+    const promedio = suma / count;
+    console.log(promedio);
+    averageDiv.textContent = "Promedio General del Curso :" +promedio;
+
+}*/
