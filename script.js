@@ -16,8 +16,9 @@ document.getElementById("studentform").addEventListener("submit",function(e){
     const student={name,lastname,fecha,grade}
     students.push(student);
     console.log(student);
-    addStudentToTable(student)
-    this.reset()
+    addStudentToTable(student);
+    calcularpromedio(); // Llamar a la función para calcular y mostrar el promedio
+    this.reset();
 });
 
 const tablebody=document.querySelector("#studentstable tbody");
@@ -30,4 +31,11 @@ function addStudentToTable(student){
     <td>${student.grade}</td>
     `;
     tablebody.appendChild(row)
+}
+
+const promedioDiv=document.getElementById("promedio")
+function calcularpromedio(){
+    const total=students.reduce((acc,student)=>acc+student.grade,0)
+    const average=total/students.length
+    promedioDiv.innerText=`El promedio es: ${average.toFixed(2)}` // Mostrar el promedio en el HTML
 }
