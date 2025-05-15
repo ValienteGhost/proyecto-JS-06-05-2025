@@ -11,19 +11,19 @@
     <form id="studentform">
         <div>
             <label for="name">nombre:</label>
-            <input type="text" id="name" required>
+            <input type="text" id="name" required oninvalid="this.setCustomValidity('Por favor, ingrese su nombre')" oninput="this.setCustomValidity('')">
         </div>
         <div>
             <label for="lastname">apellido: </label>
-            <input type="text" id="lastname" required>
+            <input type="text" id="lastname" required oninvalid="this.setCustomValidity('Por favor, ingrese su apellido')" oninput="this.setCustomValidity('')">
         </div>
         <div>
             <label for="fecha">fecha: </label>
-            <input type="date" id="fecha" required>
+            <input type="date" id="fecha" required oninvalid="this.setCustomValidity('Por favor, seleccione una fecha')" oninput="this.setCustomValidity('')">
         </div>
         <div>
             <label for="grade">nota:</label>
-            <input type="text" id="grade" step="0.1" min="1" max="7" required>
+            <input type="text" id="grade" step="0.1" min="1" max="7" required oninvalid="this.setCustomValidity('Por favor, ingrese una nota entre 1 y 7')" oninput="this.setCustomValidity('')">
         </div>
         <button type="submit">guardar</button>
     </form>
