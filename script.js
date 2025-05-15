@@ -37,7 +37,7 @@ const promedioDiv=document.getElementById("promedio")
 function calcularpromedio(){
     const total=students.reduce((nota,student)=>nota+student.grade,0)
     const average=total/students.length
-    promedioDiv.innerText=`El promedio del curso o estudiante es: ${average.toFixed(2)}` 
+    promedioDiv.innerText=`El promedio del curso o estudiante/s  es: ${average.toFixed(2)}` 
 }
 
 /* Forma alternativa de calcular el promedio
