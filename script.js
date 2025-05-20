@@ -1,43 +1,68 @@
 const students=[]
 
-document.getElementById("studentform").addEventListener("submit",function(e){
+const tablebody=document.querySelector("#studentstable tbody");
+const promedioDiv=document.getElementById("promedio");
+
+function addStudentToTable(student, index){
+    const row = document.createElement("tr");
+    row.innerHTML = `
+        <td>${student.name}</td>
+        <td>${student.lastname}</td>
+        <td>${student.fecha}</td>
+        <td>${student.grade}</td>
+        <td><button class="delete-btn" data-index="${index}">Eliminar</button></td>
+    `;
+    tablebody.appendChild(row);
+}
+
+function renderTable() {
+    tablebody.innerHTML = "";
+    students.forEach((student, index) => {
+        addStudentToTable(student, index);
+    });
+    addDeleteEvents();
+}
+
+function addDeleteEvents() {
+    const deleteButtons = document.querySelectorAll(".delete-btn");
+    deleteButtons.forEach(btn => {
+        btn.onclick = function() {
+            const idx = parseInt(this.getAttribute("data-index"));
+            students.splice(idx, 1);
+            renderTable();
+            calcularpromedio();
+        }
+    });
+}
+
+document.getElementById("studentform").addEventListener("submit", function(e){
     e.preventDefault();
 
-    const name=document.getElementById("name").value.trim();
-    const lastname=document.getElementById("lastname").value.trim();
-    const fecha=document.getElementById("fecha").value.trim();
-    const grade=parseFloat(document.getElementById("grade").value)
-    
-    if(grade<1 || grade>7 || !name || !lastname || isNaN(grade)){
-        alert("error al ingresar los datos")
-        return
+    const name = document.getElementById("name").value.trim();
+    const lastname = document.getElementById("lastname").value.trim();
+    const fecha = document.getElementById("fecha").value.trim();
+    const grade = parseFloat(document.getElementById("grade").value);
+
+    if(grade < 1 || grade > 7 || !name || !lastname || isNaN(grade)){
+        alert("error al ingresar los datos");
+        return;
     }
 
-    const student={name,lastname,fecha,grade}
+    const student = {name, lastname, fecha, grade};
     students.push(student);
-    console.log(student);
-    addStudentToTable(student);
-    calcularpromedio(); // Llamar a la función para calcular y mostrar el promedio
+    renderTable();
+    calcularpromedio();
     this.reset();
 });
 
-const tablebody=document.querySelector("#studentstable tbody");
-function addStudentToTable(student){
-    const row=document.createElement("tr")
-    row.innerHTML=`
-    <td>${student.name}</td>
-    <td>${student.lastname}</td>
-    <td>${student.fecha}</td>
-    <td>${student.grade}</td>
-    `;
-    tablebody.appendChild(row)
-}
-
-const promedioDiv=document.getElementById("promedio")
 function calcularpromedio(){
-    const total=students.reduce((nota,student)=>nota+student.grade,0)
-    const average=total/students.length
-    promedioDiv.innerText=`El promedio del curso o estudiante/s  es: ${average.toFixed(2)}` 
+    if (students.length === 0) {
+        promedioDiv.innerText = "El promedio del curso o estudiante/s es: 0.00";
+        return;
+    }
+    const total = students.reduce((nota, student) => nota + student.grade, 0);
+    const average = total / students.length;
+    promedioDiv.innerText = `El promedio del curso o estudiante/s  es: ${average.toFixed(2)}`; 
 }
 
 /* Forma alternativa de calcular el promedio
