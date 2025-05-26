@@ -1,16 +1,23 @@
-const students=[]
+const students = [];
+let editIndex = null; // Nuevo: para saber si estamos editando
 
-const tablebody=document.querySelector("#studentstable tbody");
-const promedioDiv=document.getElementById("promedio");
+const tablebody = document.querySelector("#studentstable tbody");
+const promedioDiv = document.getElementById("promedio");
 
-function addStudentToTable(student, index){
+function addStudentToTable(student, index) {
+    // Formatear fecha a dd-mm-aaaa
+    const [year, month, day] = student.fecha.split("-");
+    const fechaFormateada = `${day}-${month}-${year}`;
     const row = document.createElement("tr");
     row.innerHTML = `
         <td>${student.name}</td>
         <td>${student.lastname}</td>
-        <td>${student.fecha}</td>
+        <td>${fechaFormateada}</td>
         <td>${student.grade}</td>
-        <td><button class="delete-btn" data-index="${index}">Eliminar</button></td>
+        <td>
+            <button class="action-btn edit-btn" data-index="${index}">Editar</button>
+            <button class="action-btn delete-btn" data-index="${index}">Eliminar</button>
+        </td>
     `;
     tablebody.appendChild(row);
 }
@@ -21,6 +28,7 @@ function renderTable() {
         addStudentToTable(student, index);
     });
     addDeleteEvents();
+    addEditEvents();
 }
 
 function addDeleteEvents() {
@@ -35,7 +43,22 @@ function addDeleteEvents() {
     });
 }
 
-document.getElementById("studentform").addEventListener("submit", function(e){
+function addEditEvents() {
+    const editButtons = document.querySelectorAll(".edit-btn");
+    editButtons.forEach(btn => {
+        btn.onclick = function() {
+            const idx = parseInt(this.getAttribute("data-index"));
+            const student = students[idx];
+            document.getElementById("name").value = student.name;
+            document.getElementById("lastname").value = student.lastname;
+            document.getElementById("fecha").value = student.fecha;
+            document.getElementById("grade").value = student.grade;
+            editIndex = idx;
+        }
+    });
+}
+
+document.getElementById("studentform").addEventListener("submit", function(e) {
     e.preventDefault();
 
     const name = document.getElementById("name").value.trim();
@@ -43,26 +66,34 @@ document.getElementById("studentform").addEventListener("submit", function(e){
     const fecha = document.getElementById("fecha").value.trim();
     const grade = parseFloat(document.getElementById("grade").value);
 
-    if(grade < 1 || grade > 7 || !name || !lastname || isNaN(grade)){
+    if (grade < 1 || grade > 7 || !name || !lastname || isNaN(grade)) {
         alert("error al ingresar los datos");
         return;
     }
 
-    const student = {name, lastname, fecha, grade};
-    students.push(student);
+    const student = { name, lastname, fecha, grade };
+
+    if (editIndex !== null) {
+        // Editar estudiante existente
+        students[editIndex] = student;
+        editIndex = null;
+    } else {
+        // Agregar nuevo estudiante
+        students.push(student);
+    }
     renderTable();
     calcularpromedio();
     this.reset();
 });
 
-function calcularpromedio(){
+function calcularpromedio() {
     if (students.length === 0) {
         promedioDiv.innerText = "El promedio del curso o estudiante/s es: 0.00";
         return;
     }
     const total = students.reduce((nota, student) => nota + student.grade, 0);
     const average = total / students.length;
-    promedioDiv.innerText = `El promedio del curso o estudiante/s  es: ${average.toFixed(2)}`; 
+    promedioDiv.innerText = `El promedio del curso o estudiante/s  es: ${average.toFixed(2)}`;
 }
 
 /* Forma alternativa de calcular el promedio
