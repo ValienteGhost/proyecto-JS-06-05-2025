@@ -1,11 +1,10 @@
 const students = [];
-let editIndex = null; // Nuevo: para saber si estamos editando
+let editIndex = null; 
 
 const tablebody = document.querySelector("#studentstable tbody");
 const promedioDiv = document.getElementById("promedio");
 
 function addStudentToTable(student, index) {
-    // Formatear fecha a dd-mm-aaaa
     const [year, month, day] = student.fecha.split("-");
     const fechaFormateada = `${day}-${month}-${year}`;
     const row = document.createElement("tr");
@@ -21,6 +20,14 @@ function addStudentToTable(student, index) {
     `;
     tablebody.appendChild(row);
 }
+
+document.getElementById("fecha").addEventListener("input", function() {
+    if (this.value.split("-")[0].length > 4) {
+        let partes = this.value.split("-");
+        partes[0] = partes[0].slice(0, 4);
+        this.value = partes.join("-");
+    }
+});
 
 function renderTable() {
     tablebody.innerHTML = "";
@@ -74,11 +81,9 @@ document.getElementById("studentform").addEventListener("submit", function(e) {
     const student = { name, lastname, fecha, grade };
 
     if (editIndex !== null) {
-        // Editar estudiante existente
         students[editIndex] = student;
         editIndex = null;
     } else {
-        // Agregar nuevo estudiante
         students.push(student);
     }
     renderTable();
