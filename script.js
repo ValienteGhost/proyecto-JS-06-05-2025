@@ -94,11 +94,20 @@ document.getElementById("studentform").addEventListener("submit", function(e) {
 function calcularpromedio() {
     if (students.length === 0) {
         promedioDiv.innerText = "El promedio del curso o estudiante/s es: 0.00";
+        document.getElementById("estadisticas").innerText = 
+            "Total de estudiantes en el curso: 0 | estudiantes Aprobados: 0 | Estudiantes Reprobados: 0";
         return;
     }
     const total = students.reduce((nota, student) => nota + student.grade, 0);
     const average = total / students.length;
     promedioDiv.innerText = `El promedio del curso o estudiante/s  es: ${average.toFixed(2)}`;
+
+    const totalEstudiantes = students.length;
+    const aprobados = students.filter(s => s.grade >= 4.0).length;
+    const reprobados = students.filter(s => s.grade < 4.0).length;
+
+    document.getElementById("estadisticas").innerText = 
+        `Total de estudiantes: ${totalEstudiantes} | Aprobados: ${aprobados} | Reprobados: ${reprobados}`;
 }
 
 /* Forma alternativa de calcular el promedio
